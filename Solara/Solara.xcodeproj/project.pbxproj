@@ -78,6 +78,7 @@
 				E15102E02E29492100BC763F /* Solara */,
 				E15102F02E29492200BC763F /* SolaraTests */,
 				E15102FA2E29492200BC763F /* SolaraUITests */,
+				E151033F2E2A87B400BC763F /* Frameworks */,
 				E15102DF2E29492100BC763F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +91,13 @@
 				E15102F72E29492200BC763F /* SolaraUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E151033F2E2A87B400BC763F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,6 +203,8 @@
 			);
 			mainGroup = E15102D52E29492100BC763F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E15102DF2E29492100BC763F /* Products */;
 			projectDirPath = "";
