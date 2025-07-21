@@ -10,9 +10,9 @@ import SwiftData
 
 @main
 struct SolaraApp: App {
-    var sharedModelContainer: ModelContainer = {
+   /** var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -21,12 +21,12 @@ struct SolaraApp: App {
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+    }()**/
 
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(sharedModelContainer)
+       // .modelContainer(sharedModelContainer)
     }
 }
