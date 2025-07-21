@@ -8,16 +8,12 @@
 import Foundation
 
 struct WeatherData : Decodable {
-    let latitude : Double
-    let longitude : Double
-
+    
     let current: Current
     let hourly: Hourly
     let daily: Daily
     
-    enum CodingKeys  :String, CodingKey {
-        case latitude, longitude
-     
+    enum CodingKeys : String, CodingKey {
         case hourly, daily, current
     }
     
