@@ -9,11 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct CardView : View {
-    @StateObject var viewModel = WeatherViewModel()
+
+    @State var city : String?
+    @State var temperature : Double?
     
     var body: some View {
         
-        HStack{
+HStack{
             Image(systemName: "sun.max")
                 .resizable()
                 .scaledToFit()
@@ -24,22 +26,21 @@ struct CardView : View {
             Spacer()
             
             VStack(alignment: .leading, spacing: 4){
-                let cityName = viewModel.coordinate?.name ?? "Unknown City"
-                Text(cityName)
+               
+                Text(city ?? "CityName")
                     .font(.title2)
                     .bold()
                     .foregroundColor(.white)
                 
                 
-                let temp = viewModel.weather?.current.temperature ?? 0
-                Text(String(format:"%.0f°", temp))
+                Text(String(format:"%.0f°", temperature ?? ""))
                     .font(.system(size: 48, weight: .medium))
                     .foregroundColor(.white)
                 
             }
             .padding(.trailing, 35)
             
-        }
+        }  
             .frame(width: 350, height: 200, alignment: .trailing)
             .background(
                 RoundedRectangle(cornerRadius: 48)

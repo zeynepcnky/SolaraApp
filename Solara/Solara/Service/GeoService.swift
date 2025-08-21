@@ -22,7 +22,7 @@ struct GeoService {
         
         do {
             let decoder = try JSONDecoder().decode(Geocode.self, from: data)
-            print(String(data: data, encoding: .utf8)!)
+            //print(String(data: data, encoding: .utf8)!)
             return decoder.results.first
         }
         catch{

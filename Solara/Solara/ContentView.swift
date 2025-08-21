@@ -9,52 +9,83 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-
- 
-@StateObject var viewModel = WeatherViewModel()
-@State var cityName: String = ""
     
+    
+    @StateObject var viewModel = WeatherViewModel()
+    
+    @State var cityName : String = ""
+    @State var isSearchableActive : Bool = false
+    @State var addedcity: [WeatherItem] = []
+    @State var isSheetActive : Bool = false
+   
     var body : some View {
-        VStack{
-            
-            if !cityName.isEmpty {
-                Text("\(cityName)")
-                    .font(.headline)
-                    .padding()
-            }
+        NavigationView {
+            VStack(alignment: .leading){
                 
-            TextField("City Name", text: $cityName)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .opacity(0.1)
-                        .frame(height: 30)
-                )
-                .padding( )
-           Button("Get Weather") {
-                Task{
-                    await viewModel.getWeather(cityName: cityName)
+                if !addedcity.isEmpty {
+                               ScrollView {
+                                   VStack(spacing: 12) {
+                                       ForEach(addedcity) { city in
+                                                   
+                                    CardView(city: city.city , temperature: city.temp.current.temperature )
+                                           }
+                    
+                                       
+                                   }
+                                   .padding(.vertical)
+                               }
+                           }
+                if isSearchableActive {
+                    List{
+                        Button(action: {
+                            
+                            isSheetActive.toggle()
+                        }) {
+                            Text(cityName)
+                        }
                     }
+                    .listStyle(PlainListStyle())
+                    }
+             
+                
+                
+                
+                
+            }
+            .padding()
+            
+            .navigationTitle("☀️ Solara")
+            .searchable(text: $cityName, isPresented: $isSearchableActive, prompt: "Search a city ")
+            .onSubmit(of: .search) {
+                Task {
+                    await viewModel.getWeather(cityName: cityName)
+                    isSheetActive = true
+                }
+                isSearchableActive = false
+                
+            }
+            .sheet(isPresented: $isSheetActive) {
+                CityView(viewModel: viewModel, city: cityName) {
+                    if let weather = viewModel.weather {
+                        let newItem = WeatherItem(city: cityName, temp: weather)
+                        
+                        if !addedcity.contains(where: { $0.city == cityName}) {
+                            addedcity.append(newItem)
+                            
+                        }
+                    }
+                    cityName = ""
+                   isSheetActive = false
+                   isSearchableActive = false
+                    
                 }
                 
             }
-            .padding( )
             
-        if let temp = viewModel.weather?.current.temperature{
-                Text("\(temp) °C")
-            let lat = viewModel.coordinate?.latitude ?? 0.0
-            let lon = viewModel.coordinate?.longitude ?? 0.0
-            
-            Text("Latitude of City: \(lat)")
-            Text("Longitude of City: \(lon)")
-            
-            }
-            else {
-                Text("No Data")
-            }
-        
         }
-        
     }
+}
+    
 
 
 #Preview {
