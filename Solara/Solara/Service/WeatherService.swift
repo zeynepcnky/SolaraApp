@@ -28,7 +28,7 @@ struct WeatherService  {
             return decoder
             
         } catch {
-            print("Decode Error\(error)")
+            print(" Weather Decode Error\(error)")
             throw error
         }
         
