@@ -11,7 +11,7 @@ import Foundation
 class WeatherViewModel : ObservableObject {
     
     @Published var weather: WeatherData?
-    @Published var coordinate:  GeocodeResult?
+    @Published var coordinate:  GeocodeResult? = nil
     
     private let weatherService =  WeatherService()
     private let geocodeService = GeoService()
@@ -24,12 +24,16 @@ class WeatherViewModel : ObservableObject {
                 return
             }
             self.coordinate = coords
+            print("✅ Geo decode success → city: \(coords.name), lat: \(coords.latitude), lon: \(coords.longitude)")
         
             let data = try await weatherService.fetchWeather(latitude: coords.latitude, longitude: coords.longitude  )
             self.weather = data
-            
+            print("🌤 Weather fetched successfully for \(coords.name)")
+                        print("   Current temp: \(data.current.temperature)")
+                        print("   Max temp (today): \(data.daily.temperatureMax.first ?? 0)")
+                        print("   Min temp (today): \(data.daily.temperatureMin.first ?? 0)")
         } catch {
-            print(error)
+            print("❌ WeatherViewModel error: \(error)")
         }
         
     }
