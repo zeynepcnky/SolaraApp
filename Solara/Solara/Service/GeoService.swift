@@ -23,10 +23,10 @@ struct GeoService {
         do {
             let decoder = try JSONDecoder().decode(Geocode.self, from: data)
             //print(String(data: data, encoding: .utf8)!)
-            return decoder.results.first
+            return decoder.results?.first
         }
         catch{
-            print("Decode Error\(error)")
+            print("Geo Decode Error\(error)")
             throw error
             
         }
