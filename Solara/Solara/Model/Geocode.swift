@@ -8,12 +8,13 @@ import Foundation
 
 
 
-struct Geocode : Codable {
-    let results : [GeocodeResult]
-    
+struct Geocode : Decodable {
+    let results : [GeocodeResult]?
+    let generationTime_ms : Double?
 }
-struct GeocodeResult : Codable {
-    let name : String?
+struct GeocodeResult : Decodable, Identifiable {
+    let id : Int
+    let name : String
     let latitude :Double
     let longitude :Double
     
