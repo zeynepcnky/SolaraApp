@@ -41,7 +41,11 @@ final class WeatherCoordinator: ObservableObject {
             }
         }
     }
+    
+    func deleteAll() {
+        addedCity.removeAll()
     }
+}
 
     
 
