@@ -10,8 +10,9 @@ import SwiftData
 
 struct CardView : View {
 
-    @State var city : String?
-    @State var temperature : Double?
+    @State var city : String
+    @State var temperature : Double
+    @State var formatter = WeatherFormatter()
     
     var body: some View {
         
@@ -27,13 +28,13 @@ HStack{
             
             VStack(alignment: .leading, spacing: 4){
                
-                Text(city ?? "CityName")
+                Text(city)
                     .font(.title2)
                     .bold()
                     .foregroundColor(.white)
                 
                 
-                Text(String(format:"%.0f°", temperature ?? ""))
+                Text("\(formatter.formatTemperature(temperature))")
                     .font(.system(size: 48, weight: .medium))
                     .foregroundColor(.white)
                 
@@ -54,6 +55,3 @@ HStack{
     }
 
 
-#Preview {
-    CardView()
-}
