@@ -68,10 +68,7 @@ struct ContentView: View {
                 
              }
             
-            .overlay{
-                SettingsOverlay(isVisible: $showSettings)
-                
-              }
+            .overlay{ SettingsOverlay(isVisible: $showSettings) }
         }
     }
 }

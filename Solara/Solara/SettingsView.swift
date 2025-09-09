@@ -38,8 +38,8 @@ struct SettingsView : View {
                     HStack{
                         Button("Units"){ print("units Tapped")}
                           Spacer()
-                    Image(systemName: "chart.bar.fill")
-                            .padding(.leading, 100)
+                    Image(systemName: "chart.bar")
+                            
                     }
                    
                     HStack{
@@ -47,11 +47,14 @@ struct SettingsView : View {
                             .foregroundStyle(.red)
                         Spacer()
                         Image(systemName: "exclamationmark.triangle")
-                            .padding(.leading, 100)
+                          
                     }
                     
                 }
-            }.listStyle(GroupedListStyle())
+                
+               
+            }.listStyle(.grouped).ignoresSafeArea(.all, edges: .bottom)
+                
         }
     }
 }

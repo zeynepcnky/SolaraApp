@@ -16,18 +16,17 @@ struct SettingsOverlay: View {
             if isVisible {
                 ZStack {
                     Color.white.opacity(0.5)
-                        .ignoresSafeArea()
+                        .ignoresSafeArea(edges: .all)
                         
                         
                     
                     SettingsView()
-                        .frame(width: 250, height: 350)
+                        .frame(width: 250, height: 180)
                         .background(.ultraThickMaterial)
-                    
                         .cornerRadius(16)
                         .shadow(radius: 5)
                         .position(x: geometry.size.width + 50, y: geometry.size.height - 250)
-                        .transition(.opacity)
+                        .transition(.scale)
                 }
            }
         }
