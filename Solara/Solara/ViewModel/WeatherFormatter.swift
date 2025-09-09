@@ -9,7 +9,7 @@ import Foundation
 struct WeatherFormatter {
     private let inputDateFormatter : DateFormatter
     private let outputDateFormatter : DateFormatter
-    
+    private let outputHourFormatter : DateFormatter
     init() {
        inputDateFormatter = DateFormatter()
         inputDateFormatter.dateFormat = "yyyy-MM-dd"
@@ -18,6 +18,10 @@ struct WeatherFormatter {
         outputDateFormatter = DateFormatter()
         outputDateFormatter.dateFormat = "E"
         outputDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        outputHourFormatter = DateFormatter()
+        outputHourFormatter.dateFormat = "HH"
+        outputHourFormatter.locale = Locale(identifier: "en_US_POSIX")
     }
     
     func dateFromString(_ input: String) -> Date? {
@@ -26,6 +30,10 @@ struct WeatherFormatter {
     
     func formatDay(_ date : Date) -> String {
         outputDateFormatter.string(from: date)
+    }
+    
+    func formatHour(_ date : Date) -> String {
+        outputHourFormatter.string(from: date)
     }
     
     func formatTemperature(_ temperature: Double) -> String {
