@@ -15,33 +15,34 @@ struct ForecastDayView : View {
     
      var body : some View {
          VStack(spacing: 4) {
-             if let date = formatter.dateFromString(dateString) {
+             if let date = formatter.dailyDateFromString(dateString) {
                  Text(formatter.formatDay(date))
                      .font(.headline)
-                     .frame(alignment: .leading)
+                     .frame(alignment: .center)
                 }
              Image(systemName: "sun.max")
                  .font(.system(size: 25))
+                 .frame(alignment: .center)
              
              HStack {
                  Image(systemName: "thermometer.sun")
                      .font(.system(size: 20))
                  
-                 Text("\(formatter.formatTemperature(maxTemp))")
-                     .foregroundStyle(.red)
+                 Text("\(formatter.formatTemperature(minTemp))")
+                     .foregroundStyle(.blue)
                      .font(.headline)
              }
           HStack {
               Image(systemName: "thermometer.sun")
                   .font(.system(size: 20))
-              Text("\(formatter.formatTemperature(minTemp))")
-                  .foregroundStyle(.blue)
+              Text("\(formatter.formatTemperature(maxTemp))")
+                  .foregroundStyle(.red)
                   .font(.headline)
              }
           .padding(.vertical, 4)
              
          }
-         .frame(width: 115, height: 145)
+         .frame(width: 115, height: 165)
          .background(Color(.systemBlue).opacity(0.2))
          .cornerRadius(12)
          .shadow(color: Color.blue.opacity(0.05), radius: 3, x: 0, y:2)

@@ -15,7 +15,7 @@ struct SettingsView : View {
     var body: some View {
         NavigationView {
             List{
-               
+
                     HStack{
                         Button("Edit List") { print ("Tapped Edited List") }
                           Spacer()
@@ -51,14 +51,9 @@ struct SettingsView : View {
                     }
                     
                 
-                
-               
-            } .listStyle(PlainListStyle())
+
+            }.listStyle(PlainListStyle())
                 .listRowInsets(EdgeInsets())
-               
-                
-            
-                
                 
         }
     }

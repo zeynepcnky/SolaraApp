@@ -17,6 +17,7 @@ struct WeatherSearchView: View {
                 Text(cityName)
             }
         }
+       
         .listStyle(PlainListStyle())
     }
 }

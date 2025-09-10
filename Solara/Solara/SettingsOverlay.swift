@@ -14,7 +14,9 @@ struct SettingsOverlay: View {
     var body: some View {
         GeometryReader { geometry in
             if isVisible {
-                ZStack(alignment: .topTrailing) {
+
+                ZStack {
+
                     Color.white.opacity(0.3)
                         .ignoresSafeArea()
                         .onTapGesture {
@@ -22,15 +24,14 @@ struct SettingsOverlay: View {
                                 isVisible = false
                             }
                         }
+              
                         
-                    
-                    SettingsView()
-                        .frame(width: 255, height: 240)
+                        SettingsView()
+                        .frame(width: 250, height: 180)
                         .background(.regularMaterial)
                         .cornerRadius(16)
                         .shadow(radius: 5)
-                        .padding(.trailing, 12)
-                        .padding(.top, 60)
+                        .padding(.trailing, 60)
                         .transition(.move(edge: .top).combined(with: .opacity))
                         .position(x: geometry.size.width + 50, y: geometry.size.height - 350)
                         .animation(.spring(), value: isVisible)

@@ -40,7 +40,7 @@ struct Current : Decodable {
     }
     
 struct Hourly : Decodable {
-     
+        let time: [String]
         let temperature: [Double]
         let showers: [Float]
         let snowfall: [Float]
@@ -50,7 +50,7 @@ struct Hourly : Decodable {
     
     
     enum CodingKeys : String, CodingKey {
-       
+        case time
         case windSpeed = "wind_speed_10m"
         case temperature = "temperature_2m"
         case rain, showers, snowfall

@@ -19,23 +19,27 @@ struct CityView: View {
     
     var body: some View {
         NavigationView {
-           VStack{
-                cityHeader
-                currentWeather
-                Divider()
-                forecastSection
+            ScrollView{
+                VStack{
+                    cityHeader
+                    currentWeather
+                    Divider()
+                    HourlySection
+                    .padding()
+                    forecastSection
+                }
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { dismiss() }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Add") {
+                            onAdd()
+                            dismiss()
+                        }
+                    }
+                }
             }
-           .toolbar {
-               ToolbarItem(placement: .cancellationAction) {
-                   Button("Cancel") { dismiss() }
-               }
-               ToolbarItem(placement: .confirmationAction) {
-                   Button("Add") {
-                       onAdd()
-                       dismiss()
-                   }
-               }
-           }
     }
 }
     private var cityHeader: some View {
@@ -65,11 +69,11 @@ struct CityView: View {
             HStack{
                 Image(systemName: "thermometer.sun")
                     .font(.system(size: 20))
-                Text("Max Temp: \(formatter.formatTemperature(maxTemp))")
+                Text("Min Temp: \(formatter.formatTemperature(minTemp))")
                     
                 Image(systemName: "thermometer.sun")
                     .font(.system(size: 20))
-                Text("Min Temp: \(formatter.formatTemperature(minTemp))") }
+                Text("Max Temp: \(formatter.formatTemperature(maxTemp))") }
             
         }
     }
@@ -95,6 +99,28 @@ struct CityView: View {
                 }
             }
             
+        }
+    }
+    
+    private var HourlySection : some View {
+        VStack(alignment: .leading){
+            Text("Hourly Weather Forecast")
+                .font(.headline)
+                .padding(.horizontal)
+            Divider()
+            if let hourlyForecast = viewModel.weather?.hourly {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12){
+                        ForEach(0..<hourlyForecast.time.count, id:\.self) { index in
+                            HourlyForecastView(hour: hourlyForecast.time[index],
+                                               temp: hourlyForecast.temperature[index],
+                                               formatter: formatter
+                                               )
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
         }
     }
 
