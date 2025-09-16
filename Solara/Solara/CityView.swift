@@ -12,7 +12,8 @@ struct CityView: View {
     
     @ObservedObject var viewModel : WeatherViewModel
     var city : String?
-    var onAdd : () -> Void
+    var onAdd : (() -> Void)? = nil
+    var isFromSearch : Bool
     @Environment(\.dismiss) var dismiss
     
     private let formatter = WeatherFormatter()
@@ -29,13 +30,15 @@ struct CityView: View {
                     forecastSection
                 }
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { dismiss() }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Add") {
-                            onAdd()
-                            dismiss()
+                    if isFromSearch {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") { dismiss() }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Add") {
+                                onAdd?()
+                                dismiss()
+                            }
                         }
                     }
                 }
@@ -63,8 +66,9 @@ struct CityView: View {
         let minTemp = viewModel.weather?.daily.temperatureMin.first ?? 0.0
         
         return VStack{
-            Text("Current Temperature: \(formatter.formatTemperature(temp))")
-                .font(.system(size: 20, weight: .bold))
+            Text("\(formatter.formatTemperature(temp))")
+                .font(.system(size: 60, weight: .light))
+                .padding()
 
             HStack{
                 Image(systemName: "thermometer.sun")

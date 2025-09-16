@@ -27,18 +27,20 @@ struct SettingsOverlay: View {
               
                         
                         SettingsView()
-                        .frame(width: 250, height: 180)
+                        .frame(width: 250, height: 220)
                         .background(.regularMaterial)
                         .cornerRadius(16)
                         .shadow(radius: 5)
                         .padding(.trailing, 60)
                         .transition(.move(edge: .top).combined(with: .opacity))
-                        .position(x: geometry.size.width + 50, y: geometry.size.height - 350)
+                        .position(x: geometry.size.width - 95, y: geometry.size.height - 650)
                         .animation(.spring(), value: isVisible)
                 }
            }
         }
+        
     }
+    
 }
 
 

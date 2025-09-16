@@ -30,21 +30,19 @@ struct ContentView: View {
                         cityName: $coordinator.cityName,
                         onSelect: {  coordinator.startSearch() }
                     )
-                }
-                
-            }
-            .padding()
-            .sheet(item: $coordinator.selectedWeather){ weather in
-                CityView(viewModel: coordinator.viewModel, city: weather.city) {
-                    coordinator.confirmSelected()
-                }
-                .matchedGeometryEffect(id: weather.id, in: animation)
-            }
-            .sheet(isPresented: $coordinator.isSheetActive){
-                CityView(viewModel: coordinator.viewModel, city: coordinator.cityName){
-                    coordinator.addCity()
+                    
                     
                 }
+                                }
+                .sheet(item: $coordinator.selectedWeather){ weather in
+                    CityView(viewModel: coordinator.viewModel, city: weather.city, isFromSearch: false)
+                        
+                            .matchedGeometryEffect(id: weather.id, in: animation)
+                    }
+                
+            
+            .sheet(isPresented: $coordinator.isSheetActive){
+                CityView(viewModel: coordinator.viewModel, city: coordinator.cityName,onAdd: {coordinator.addCity()}, isFromSearch: true)
             }
             .searchable(
                 text : $coordinator.cityName,
@@ -63,15 +61,15 @@ struct ContentView: View {
                             .imageScale(.large)
                     }
                     
-                   
+                    
                 }
                 
-             }
-            
+            }
+        }
             .overlay{ SettingsOverlay(isVisible: $showSettings) }
         }
     }
-}
+
 
     
 
