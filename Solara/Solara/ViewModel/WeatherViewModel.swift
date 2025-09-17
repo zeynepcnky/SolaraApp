@@ -32,7 +32,7 @@ class WeatherViewModel : ObservableObject {
                         print("   Current temp: \(data.current.temperature)")
                         print("   Max temp (today): \(data.daily.temperatureMax.first ?? 0)")
                         print("   Min temp (today): \(data.daily.temperatureMin.first ?? 0)")
-                        //print("Hourly Time: \(data.hourly.time)")
+                        print(" Weather Code: \(data.current.weatherCode)")
         } catch {
             print("❌ WeatherViewModel error: \(error)")
         }

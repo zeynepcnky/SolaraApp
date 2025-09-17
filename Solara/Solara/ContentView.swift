@@ -18,7 +18,7 @@ struct ContentView: View {
     
     var body : some View {
         NavigationView {
-            VStack(alignment: .leading){
+            VStack{
                 if !coordinator.isSearchableActive {
                     WeatherCardListView (
                         cities: coordinator.addedCity,
@@ -35,9 +35,10 @@ struct ContentView: View {
                 }
                                 }
                 .sheet(item: $coordinator.selectedWeather){ weather in
-                    CityView(viewModel: coordinator.viewModel, city: weather.city, isFromSearch: false)
+                    CityView(viewModel: coordinator.viewModel,
+                             city: weather.city,
+                             isFromSearch: false)
                         
-                            .matchedGeometryEffect(id: weather.id, in: animation)
                     }
                 
             

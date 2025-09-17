@@ -18,7 +18,7 @@ struct WeatherCardListView: View {
             ScrollView {
                 VStack(spacing: 12) {
                     ForEach(cities) { city in
-                        CardView(city: city.city, temperature: city.temp.current.temperature)
+                        CardView(city: city.city, temperature: city.temp.current.temperature, weatherCode: city.temp.current.weatherCode)
                             .matchedGeometryEffect(id: city.id, in: animation)
                             .onTapGesture { onSelect(city) }
                         

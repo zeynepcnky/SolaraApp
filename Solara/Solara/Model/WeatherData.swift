@@ -20,7 +20,7 @@ struct WeatherData : Decodable {
     
 }
 struct Current : Decodable {
-        
+        let weatherCode: Int
         let temperature: Double
         let isDay: Float
         let rain: Float
@@ -30,7 +30,7 @@ struct Current : Decodable {
         let windDirection : Float
         
         enum CodingKeys : String, CodingKey {
-        
+            case weatherCode = "weather_code"
             case temperature = "temperature_2m"
             case isDay = "is_day"
             case rain, showers, snowfall
@@ -40,6 +40,7 @@ struct Current : Decodable {
     }
     
 struct Hourly : Decodable {
+        let weatherCode: [Int]
         let time: [String]
         let temperature: [Double]
         let showers: [Float]
@@ -51,6 +52,7 @@ struct Hourly : Decodable {
     
     enum CodingKeys : String, CodingKey {
         case time
+        case weatherCode = "weather_code"
         case windSpeed = "wind_speed_10m"
         case temperature = "temperature_2m"
         case rain, showers, snowfall
@@ -59,11 +61,14 @@ struct Hourly : Decodable {
 }
     
 struct Daily : Decodable {
+        let weatherCode: [Int]
         let time : [String]
         let temperatureMax: [Double]
         let temperatureMin: [Double]
     
+    
     enum CodingKeys : String, CodingKey {
+        case weatherCode = "weather_code"
         case time
         case temperatureMax = "temperature_2m_max"
         case temperatureMin = "temperature_2m_min"
