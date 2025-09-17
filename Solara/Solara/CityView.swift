@@ -26,7 +26,7 @@ struct CityView: View {
                     currentWeather
                     Divider()
                     HourlySection
-                    .padding()
+                        .padding()
                     forecastSection
                 }
                 .toolbar {
@@ -43,20 +43,21 @@ struct CityView: View {
                     }
                 }
             }
+        }
     }
-}
     private var cityHeader: some View {
         VStack{
             Text(city ?? "")
                 .font(.title2)
                 .bold()
                 .padding()
-            
-            Image(systemName: "sun.max")
-            .font(.system(size: 100))
-            .foregroundStyle(.yellow)
-            .padding()
-        
+            if let currentCode = viewModel.weather?.current.weatherCode {
+                let weatherIcon = WeatherIcon(code: currentCode)
+                Image(weatherIcon.assetName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 110, height: 95)
+            }
         }
     }
     
@@ -69,15 +70,19 @@ struct CityView: View {
             Text("\(formatter.formatTemperature(temp))")
                 .font(.system(size: 60, weight: .light))
                 .padding()
-
+            
             HStack{
-                Image(systemName: "thermometer.sun")
-                    .font(.system(size: 20))
-                Text("Min Temp: \(formatter.formatTemperature(minTemp))")
-                    
-                Image(systemName: "thermometer.sun")
-                    .font(.system(size: 20))
-                Text("Max Temp: \(formatter.formatTemperature(maxTemp))") }
+                Image("Image")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                Text("H:\(formatter.formatTemperature(maxTemp))")
+                
+                Image("Image")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
+                Text("L:\(formatter.formatTemperature(minTemp))") }
             
         }
     }
@@ -96,7 +101,9 @@ struct CityView: View {
                                 dateString: forecast.time[index],
                                 maxTemp: forecast.temperatureMax[index],
                                 minTemp: forecast.temperatureMin[index],
-                                formatter: formatter )
+                                formatter: formatter,
+                                weatherCode: forecast.weatherCode[index]
+                            )
                         }
                     }
                     .padding(.horizontal)
@@ -113,21 +120,32 @@ struct CityView: View {
                 .padding(.horizontal)
             Divider()
             if let hourlyForecast = viewModel.weather?.hourly {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12){
-                        ForEach(0..<hourlyForecast.time.count, id:\.self) { index in
-                            HourlyForecastView(hour: hourlyForecast.time[index],
-                                               temp: hourlyForecast.temperature[index],
-                                               formatter: formatter
-                                               )
-                        }
+                
+                let now = Date()
+                
+                let filteredForecast = hourlyForecast.time.enumerated().compactMap { index, hourString -> Int? in
+                    if let forecastDate = formatter.hourFromString(hourString) {
+                        
+                        return forecastDate >= now ? index : nil
                     }
-                    .padding(.horizontal)
+                    return nil
+                }
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12){
+                            ForEach(filteredForecast, id:\.self) { index in
+                                HourlyForecastView(hour: hourlyForecast.time[index],
+                                                   temp: hourlyForecast.temperature[index],
+                                                   formatter: formatter,
+                                                   weatherCode: hourlyForecast.weatherCode[index]
+                                )
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
                 }
             }
         }
+        
     }
-
-}
 
 
