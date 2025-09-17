@@ -13,15 +13,17 @@ struct CardView : View {
     @State var city : String
     @State var temperature : Double
     @State var formatter = WeatherFormatter()
-    
+     
+    let weatherCode : Int
     var body: some View {
             
             HStack{
-                Image(systemName: "sun.max")
+                 let weatherIcon = WeatherIcon(code: weatherCode)
+           
+                Image(weatherIcon.assetName)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 100, height: 100)
-                    .foregroundColor(.yellow)
                     .padding(.leading,35)
                 
                 Spacer()
