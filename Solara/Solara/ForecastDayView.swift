@@ -12,29 +12,37 @@ struct ForecastDayView : View {
     let maxTemp: Double
     let minTemp: Double
     let formatter : WeatherFormatter
+    let weatherCode : Int
     
      var body : some View {
+         let weatherIcon = WeatherIcon(code: weatherCode )
          VStack(spacing: 4) {
              if let date = formatter.dailyDateFromString(dateString) {
                  Text(formatter.formatDay(date))
                      .font(.headline)
                      .frame(alignment: .center)
                 }
-             Image(systemName: "sun.max")
-                 .font(.system(size: 25))
-                 .frame(alignment: .center)
+             Image(weatherIcon.assetName)
+                 .resizable()
+                 .scaledToFit( )
+                 .frame(width: 40, height: 40, alignment: .center)
              
              HStack {
-                 Image(systemName: "thermometer.sun")
-                     .font(.system(size: 20))
+                 Image("Image")
+                     .resizable()
+                     .scaledToFit()
+                     .frame(width: 20, height: 20)
                  
                  Text("\(formatter.formatTemperature(minTemp))")
                      .foregroundStyle(.blue)
                      .font(.headline)
              }
           HStack {
-              Image(systemName: "thermometer.sun")
-                  .font(.system(size: 20))
+              Image("Image")
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 20, height: 20)
+              
               Text("\(formatter.formatTemperature(maxTemp))")
                   .foregroundStyle(.red)
                   .font(.headline)

@@ -12,16 +12,19 @@ struct HourlyForecastView: View {
     let hour : String
     let temp : Double
     let formatter : WeatherFormatter
+    let weatherCode: Int
     
     var body: some View {
+        let weatherIcon = WeatherIcon(code: weatherCode)
         VStack(alignment: .leading) {
             if let hourly = formatter.hourFromString(hour) {
                 Text(formatter.formatHour(hourly))
                     .font(.headline)
                     .frame(alignment: .leading)
             }
-            Image(systemName: "cloud.sun")
-                .font(.system(size: 25))
+            Image(weatherIcon.assetName)
+                .resizable()
+                .frame(width: 20, height: 20)
             
             Text("\(formatter.formatTemperature(temp))")
                 
