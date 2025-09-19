@@ -13,3 +13,6 @@ struct WeatherItem : Identifiable {
     let city : String
     let temp : WeatherData
 }
+
+
+    
