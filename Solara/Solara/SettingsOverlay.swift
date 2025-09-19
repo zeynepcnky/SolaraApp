@@ -9,14 +9,16 @@ import SwiftUI
 
 struct SettingsOverlay: View {
     @Binding var isVisible: Bool
-   
+    @Binding var selectedUnit : Bool
+    internal let onEdit: () -> Void
     
+ 
     var body: some View {
         GeometryReader { geometry in
             if isVisible {
 
                 ZStack {
-
+                    
                     Color.white.opacity(0.3)
                         .ignoresSafeArea()
                         .onTapGesture {
@@ -24,9 +26,9 @@ struct SettingsOverlay: View {
                                 isVisible = false
                             }
                         }
-              
+                }
                         
-                        SettingsView()
+                    SettingsView(selectedUnit: $selectedUnit, onEdit: onEdit)
                         .frame(width: 250, height: 220)
                         .background(.regularMaterial)
                         .cornerRadius(16)
@@ -35,7 +37,7 @@ struct SettingsOverlay: View {
                         .transition(.move(edge: .top).combined(with: .opacity))
                         .position(x: geometry.size.width - 95, y: geometry.size.height - 650)
                         .animation(.spring(), value: isVisible)
-                }
+                
            }
         }
         

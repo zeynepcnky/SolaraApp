@@ -7,22 +7,26 @@
 import Foundation
 
 struct WeatherFormatter {
-    private let inputHourFormatter : DateFormatter
+    
     private let inputDateFormatter : DateFormatter
     private let outputDateFormatter : DateFormatter
+    
+    private let inputHourFormatter : DateFormatter
     private let outputHourFormatter : DateFormatter
+    
     init() {
-        inputHourFormatter = DateFormatter()
-        inputHourFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm"
-        inputHourFormatter.locale = Locale(identifier: "en_US_POSIX")
         
-        inputDateFormatter = DateFormatter()
+         inputDateFormatter = DateFormatter()
         inputDateFormatter.dateFormat = "yyyy-MM-dd"
         inputDateFormatter.locale = Locale(identifier: "en_US_POSIX")
         
         outputDateFormatter = DateFormatter()
         outputDateFormatter.dateFormat = "E"
         outputDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        inputHourFormatter = DateFormatter()
+        inputHourFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm"
+        inputHourFormatter.locale = Locale(identifier: "en_US_POSIX")
         
         outputHourFormatter = DateFormatter()
         outputHourFormatter.dateFormat = "H"
@@ -48,5 +52,8 @@ struct WeatherFormatter {
     func formatTemperature(_ temperature: Double) -> String {
         String(format: "%.0f°", temperature)
     }
+    func celciusToFarenheit(_ celcius: Double) -> Double {
+        return (celcius * 9/5) + 32
     
+}
 }

@@ -12,10 +12,12 @@ struct CityView: View {
     
     @ObservedObject var viewModel : WeatherViewModel
     var city : String?
+    var temp : Double?
     var onAdd : (() -> Void)? = nil
     var isFromSearch : Bool
     @Environment(\.dismiss) var dismiss
-    
+    //@Binding var selectedUnit : Bool
+ 
     private let formatter = WeatherFormatter()
     
     var body: some View {
@@ -44,7 +46,10 @@ struct CityView: View {
                 }
             }
         }
+       
+        
     }
+   
     private var cityHeader: some View {
         VStack{
             Text(city ?? "")
@@ -89,7 +94,7 @@ struct CityView: View {
     
     private var forecastSection : some View {
         VStack(alignment: .leading){
-            Text("7-Day Forecast")
+            Text("Day Forecast")
                 .font(.headline)
                 .padding(.horizontal)
             Divider()

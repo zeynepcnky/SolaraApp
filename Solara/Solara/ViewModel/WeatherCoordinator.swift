@@ -32,6 +32,7 @@ final class WeatherCoordinator: ObservableObject {
     func confirmSelected() {
         selectedWeather = nil
         }
+   
     func addCity() {
         if let weather = viewModel.weather {
             let newItem = WeatherItem(city: cityName, temp: weather)
@@ -41,11 +42,18 @@ final class WeatherCoordinator: ObservableObject {
             }
         }
     }
+       
+        
     
-    func deleteAll() {
-        addedCity.removeAll()
-    }
-}
-
+  }
+       extension WeatherCoordinator {
+           func deleteCity(at offsets: IndexSet){
+               addedCity.remove(atOffsets: offsets)
+            }
+           
+            func moveCity(from source: IndexSet, to destination: Int) {
+                addedCity.move(fromOffsets: source, toOffset: destination)
+          }
+   }
     
 

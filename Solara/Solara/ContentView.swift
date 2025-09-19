@@ -10,21 +10,29 @@ import SwiftData
 
 struct ContentView: View {
     
-    @Namespace var animation
+  
     @StateObject private var coordinator = WeatherCoordinator()
     @State private var showSettings: Bool = false
+    @State private var isEditing: Bool = false
+    @State private var selectedUnit = false
+    
     
     
     
     var body : some View {
         NavigationView {
             VStack{
+                
                 if !coordinator.isSearchableActive {
-                    WeatherCardListView (
+                    
+                    CardListView (
+                        coordinator: coordinator,
                         cities: coordinator.addedCity,
-                        animation: animation,
-                        onSelect: { city in coordinator.select(city) }
-                    )
+                        onSelect: { city in coordinator.select(city)},
+                        isEditing: $isEditing,
+                        selectedUnit: $selectedUnit
+
+                        )
                 } else {
                     WeatherSearchView(
                         cityName: $coordinator.cityName,
@@ -37,7 +45,10 @@ struct ContentView: View {
                 .sheet(item: $coordinator.selectedWeather){ weather in
                     CityView(viewModel: coordinator.viewModel,
                              city: weather.city,
-                             isFromSearch: false)
+                             isFromSearch: false,
+                             
+                    
+                    )
                         
                     }
                 
@@ -67,9 +78,14 @@ struct ContentView: View {
                 
             }
         }
-            .overlay{ SettingsOverlay(isVisible: $showSettings) }
+        .overlay{ SettingsOverlay(isVisible: $showSettings, selectedUnit: $selectedUnit){
+            showSettings = false
+            isEditing = true
+            
+        }
         }
     }
+}
 
 
     

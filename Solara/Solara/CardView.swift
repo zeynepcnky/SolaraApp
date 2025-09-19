@@ -10,12 +10,18 @@ import SwiftData
 
 struct CardView : View {
     
-    @State var city : String
-    @State var temperature : Double
-    @State var formatter = WeatherFormatter()
-     
+    var city : String
+    var temperature : Double
+    var formatter = WeatherFormatter()
     let weatherCode : Int
-    var body: some View {
+    @Binding var selectedUnit : Bool
+
+    var displayedTemp : Double {
+        selectedUnit ? formatter.celciusToFarenheit(temperature) : temperature
+    }
+        
+    
+   var body: some View {
             
             HStack{
                  let weatherIcon = WeatherIcon(code: weatherCode)
@@ -35,15 +41,15 @@ struct CardView : View {
                         .bold()
                         .foregroundColor(.white)
                     
-                    
-                    Text("\(formatter.formatTemperature(temperature))")
-                        .font(.system(size: 48, weight: .medium))
-                        .foregroundColor(.white)
+                        Text("\(formatter.formatTemperature(displayedTemp))")
+                            .font(.system(size: 48, weight: .medium))
+                            .foregroundColor(.white)
                     
                 }
                 .padding(.trailing, 35)
-                
             }
+
+        
             .frame(width: 350, height: 200, alignment: .trailing)
             .background(
                 RoundedRectangle(cornerRadius: 48)
@@ -52,7 +58,9 @@ struct CardView : View {
                             gradient: Gradient(colors: [Color.blue, Color.purple]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing )))
+        
             
     }
+        
 }
 

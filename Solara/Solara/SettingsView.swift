@@ -9,55 +9,61 @@ import SwiftUI
 import Foundation
 
 struct SettingsView : View {
+  
+    @Binding var selectedUnit : Bool 
+    private let formatter = WeatherFormatter()
+    let onEdit: () -> Void
+    //@State var baseTemperature: Double
     
-    @State private var isCelcius = true
-    
+
     var body: some View {
         NavigationView {
             List{
-
-                    HStack{
-                        Button("Edit List") { print ("Tapped Edited List") }
-                          Spacer()
-                        Image(systemName: "pencil")
-                                                }
-                    HStack{
-                        Button("Notifications"){ print("Notifications Tapped") }
-                        Spacer()
-                        Image(systemName: "bell")
-                          
-                    }
+                HStack{
+                    Button("Edit List"){ onEdit() }
+                    Spacer()
+                    Image(systemName: "pencil")
                     
-                    Picker("Temperature Unit", selection: $isCelcius){
-                        Text("Santigrat").tag(true)
-                        Text("Fahrenheit").tag(false)
-                    }
-                    .pickerStyle(.segmented)
-                   
-                   
-                    HStack{
-                        Button("Units"){ print("units Tapped")}
-                          Spacer()
-                    Image(systemName: "chart.bar")
-                            
-                    }
-                   
-                    HStack{
-                        Button("Report issue"){ print("Report a issue tapped")}
-                            .foregroundStyle(.red)
-                        Spacer()
-                        Image(systemName: "exclamationmark.triangle")
-                          
-                    }
+                }
+        
+                HStack{
+                    Button("Notifications"){  }
+                    Spacer()
+                    Image(systemName: "bell")
                     
+                }
                 
-
+                Picker("Temperature Unit", selection: $selectedUnit ){
+                    Text("Santigrat").tag(false)
+                    Text("Fahrenheit").tag(true)
+                    
+                }
+                .pickerStyle(.segmented)
+              
+                
+                HStack{
+                    Button("Units"){ print("units Tapped")}
+                    Spacer()
+                    Image(systemName: "chart.bar")
+                    
+                }
+                
+                HStack{
+                    Button("Report issue"){ print("Report a issue tapped")}
+                        .foregroundStyle(.red)
+                    Spacer()
+                    Image(systemName: "exclamationmark.triangle")
+                    
+                }
+                
+                
+                
             }.listStyle(PlainListStyle())
                 .listRowInsets(EdgeInsets())
-                
+            
         }
+        
     }
 }
-       
     
 
