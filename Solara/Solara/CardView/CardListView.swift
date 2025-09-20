@@ -24,7 +24,10 @@ struct CardListView: View {
             if !cities.isEmpty {
                 List {
                     ForEach(cities) { city in
-                        CardView(city: city.city, temperature: city.temp.current.temperature, weatherCode: city.temp.current.weatherCode, selectedUnit: $selectedUnit)
+                        CardView(city: city.city,
+                                 temperature: city.temp.current.temperature,
+                                 weatherCode: city.temp.current.weatherCode,
+                                 selectedUnit: $selectedUnit)
                             .onTapGesture { onSelect(city) }
                         
                     }
@@ -32,20 +35,19 @@ struct CardListView: View {
                     .onMove(perform: coordinator.moveCity)
                     
                 }
+              
                 .environment(\.editMode, $editMode)
             }
-            
+                
         }
-            
-            
-                .onChange(of: isEditing, perform: {  value in
-                    withAnimation {
-                        editMode = value ? .active : .inactive
-                        
-                    }
-                    
-                    
-                })
+        .scrollContentBackground(.hidden)
+        .background(Color.clear)
         
+        .onChange(of: isEditing, perform: {  value in
+            withAnimation {
+                editMode = value ? .active : .inactive
+                
+            }
+        })
     }
 }
