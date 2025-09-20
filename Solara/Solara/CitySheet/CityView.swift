@@ -67,28 +67,13 @@ struct CityView: View {
     }
     
     private var currentWeather: some View {
-        let temp = viewModel.weather?.current.temperature ?? 0.0
-        let maxTemp = viewModel.weather?.daily.temperatureMax.first ?? 0.0
-        let minTemp = viewModel.weather?.daily.temperatureMin.first ?? 0.0
-        
-        return VStack{
-            Text("\(formatter.formatTemperature(temp))")
-                .font(.system(size: 60, weight: .light))
-                .padding()
-            
-            HStack{
-                Image("Image")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                Text("H:\(formatter.formatTemperature(maxTemp))")
-                
-                Image("Image")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                Text("L:\(formatter.formatTemperature(minTemp))") }
-            
+      return VStack{
+            CurrentWeatherView(
+                temp: viewModel.weather?.current.temperature ?? 0.0,
+                maxTemp: viewModel.weather?.daily.temperatureMax.first ?? 0.0,
+                minTemp: viewModel.weather?.daily.temperatureMin.first ?? 0.0,
+                formatter: formatter,
+                selectedUnit: $selectedUnit)
         }
     }
     
