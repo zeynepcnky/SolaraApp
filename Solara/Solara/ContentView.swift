@@ -46,6 +46,7 @@ struct ContentView: View {
                     CityView(viewModel: coordinator.viewModel,
                              city: weather.city,
                              isFromSearch: false,
+                             selectedUnit: $selectedUnit
                              
                     
                     )
@@ -54,7 +55,8 @@ struct ContentView: View {
                 
             
             .sheet(isPresented: $coordinator.isSheetActive){
-                CityView(viewModel: coordinator.viewModel, city: coordinator.cityName,onAdd: {coordinator.addCity()}, isFromSearch: true)
+                CityView(viewModel: coordinator.viewModel, city: coordinator.cityName,onAdd: {coordinator.addCity()}, isFromSearch: true,
+                    selectedUnit: $selectedUnit)
             }
             .searchable(
                 text : $coordinator.cityName,
