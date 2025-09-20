@@ -15,17 +15,17 @@ struct CardView : View {
     var formatter = WeatherFormatter()
     let weatherCode : Int
     @Binding var selectedUnit : Bool
-
+    
     var displayedTemp : Double {
         selectedUnit ? formatter.celciusToFarenheit(temperature) : temperature
     }
-        
     
-   var body: some View {
-            
+    
+    var body: some View {
+  
             HStack{
-                 let weatherIcon = WeatherIcon(code: weatherCode)
-           
+                let weatherIcon = WeatherIcon(code: weatherCode)
+                
                 Image(weatherIcon.assetName)
                     .resizable()
                     .scaledToFit()
@@ -41,26 +41,30 @@ struct CardView : View {
                         .bold()
                         .foregroundColor(.white)
                     
-                        Text("\(formatter.formatTemperature(displayedTemp))")
-                            .font(.system(size: 48, weight: .medium))
-                            .foregroundColor(.white)
+                    Text("\(formatter.formatTemperature(displayedTemp))")
+                        .font(.system(size: 48, weight: .medium))
+                        .foregroundColor(.white)
                     
                 }
                 .padding(.trailing, 35)
             }
-
-        
-            .frame(width: 350, height: 200, alignment: .trailing)
+            
+            
+            .frame(width: 350, height: 200, alignment: .center)
+            
             .background(
-                RoundedRectangle(cornerRadius: 48)
+                RoundedRectangle(cornerSize: .init(width: 35, height: 35))
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: [Color.blue, Color.purple]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing )))
-        
             
-    }
+            
+            
+            
         
-}
 
+        
+    }
+}
