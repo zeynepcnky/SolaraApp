@@ -10,7 +10,7 @@ import Foundation
 // UI changes uptaded on MAİN THREAD
 class WeatherViewModel : ObservableObject {
     
-    @Published var weather: WeatherData?
+    @Published var weather: APIWeatherData?
     @Published var coordinate:  GeocodeResult? = nil
     
     private let weatherService =  WeatherService()

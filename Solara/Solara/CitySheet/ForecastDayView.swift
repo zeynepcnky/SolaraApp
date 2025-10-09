@@ -42,6 +42,7 @@ struct ForecastDayView : View {
                  
                  Text("\(formatter.formatTemperature(displayMinTemp))")
                      .foregroundStyle(.blue)
+                     .bold()
                      .font(.headline)
              }
           HStack {
@@ -58,7 +59,7 @@ struct ForecastDayView : View {
              
          }
          .frame(width: 115, height: 165)
-         .background(Color(.systemBlue).opacity(0.2))
+         .background(Color(.forecastBack))
          .cornerRadius(12)
          .shadow(color: Color.blue.opacity(0.05), radius: 3, x: 0, y:2)
     }

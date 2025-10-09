@@ -11,10 +11,12 @@ import SwiftData
 struct CityView: View {
     
     @ObservedObject var viewModel : WeatherViewModel
+    
     var city : String?
     var temp : Double?
     var onAdd : (() -> Void)? = nil
     var isFromSearch : Bool
+    
     @Environment(\.dismiss) var dismiss
     @Binding var selectedUnit : Bool
  
@@ -30,7 +32,8 @@ struct CityView: View {
                     HourlySection
                         .padding()
                     forecastSection
-                }
+                    
+            }
                 .toolbar {
                     if isFromSearch {
                         ToolbarItem(placement: .cancellationAction) {
@@ -44,9 +47,19 @@ struct CityView: View {
                         }
                     }
                 }
+               
+                
             }
+            .background(currentBackground)
         }
-       
+         var currentBackground : LinearGradient {
+            if let code = viewModel.weather?.current.weatherCode {
+                return WeatherIcon(code: code).gradient
+            }
+             return LinearGradient(colors : [.blue, .purple],
+                                   startPoint: .topLeading,
+                                   endPoint: .bottomTrailing)
+        }
         
     }
    

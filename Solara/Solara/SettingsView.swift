@@ -13,7 +13,7 @@ struct SettingsView : View {
     @Binding var selectedUnit : Bool 
     private let formatter = WeatherFormatter()
     let onEdit: () -> Void
-    //@State var baseTemperature: Double
+   
     
 
     var body: some View {

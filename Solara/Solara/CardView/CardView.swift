@@ -16,16 +16,17 @@ struct CardView : View {
     let weatherCode : Int
     @Binding var selectedUnit : Bool
     
+   
+    
     var displayedTemp : Double {
         selectedUnit ? formatter.celciusToFarenheit(temperature) : temperature
     }
-    
+   
     
     var body: some View {
-  
+        ZStack{
+            let weatherIcon = WeatherIcon(code: weatherCode)
             HStack{
-                let weatherIcon = WeatherIcon(code: weatherCode)
-                
                 Image(weatherIcon.assetName)
                     .resizable()
                     .scaledToFit()
@@ -47,20 +48,16 @@ struct CardView : View {
                     
                 }
                 .padding(.trailing, 35)
+                
             }
-            
             
             .frame(width: 350, height: 200, alignment: .center)
             
             .background(
-                RoundedRectangle(cornerSize: .init(width: 35, height: 35))
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.blue, Color.purple]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing )))
+                RoundedRectangle(cornerRadius: 35)
+                    .fill(weatherIcon.gradient))
             
-            
+        }
             
             
         

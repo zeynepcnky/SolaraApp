@@ -9,6 +9,7 @@ struct CurrentWeatherView : View {
     let temp : Double
     let maxTemp : Double
     let minTemp : Double
+   
     let formatter : WeatherFormatter
     @Binding var selectedUnit : Bool
     var displayTemp : Double {
@@ -22,24 +23,27 @@ struct CurrentWeatherView : View {
     }
     
     var body: some View {
-        VStack{
-            Text("\(formatter.formatTemperature(displayTemp))")
-                .font(.system(size: 60, weight: .light))
-                .padding()
-            
-            HStack{
-                Image("Image")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                Text("H:\(formatter.formatTemperature(displayMaxTemp))")
+      
+           
+            VStack{
+                Text("\(formatter.formatTemperature(displayTemp))")
+                    .font(.system(size: 60, weight: .light))
+                    .padding()
                 
-                Image("Image")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
-                Text("L:\(formatter.formatTemperature(displayMinTemp))") }
-            
-        }
+                HStack{
+                    Image("Image")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                    Text("H:\(formatter.formatTemperature(displayMaxTemp))")
+                    
+                    Image("Image")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
+                    Text("L:\(formatter.formatTemperature(displayMinTemp))") }
+                
+            }
+        
     }
 }

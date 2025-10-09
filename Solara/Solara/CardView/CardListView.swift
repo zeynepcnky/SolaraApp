@@ -10,12 +10,14 @@ import SwiftUI
 
 struct CardListView: View {
     @ObservedObject var coordinator: WeatherCoordinator
-    let cities: [WeatherItem]
-    let onSelect : (WeatherItem) -> Void
+    let cities: [WeatherData]
+    let onSelect : (WeatherData) -> Void
     @Binding var isEditing: Bool
     @Binding var selectedUnit : Bool
    
     @State private var editMode: EditMode = .inactive
+    
+   
     
     
     var body: some View {
@@ -25,8 +27,8 @@ struct CardListView: View {
                 List {
                     ForEach(cities) { city in
                         CardView(city: city.city,
-                                 temperature: city.temp.current.temperature,
-                                 weatherCode: city.temp.current.weatherCode,
+                                 temperature: city.current.temperature,
+                                 weatherCode: city.current.weatherCode,
                                  selectedUnit: $selectedUnit)
                             .onTapGesture { onSelect(city) }
                         
@@ -48,6 +50,7 @@ struct CardListView: View {
                 editMode = value ? .active : .inactive
                 
             }
+          
         })
     }
 }

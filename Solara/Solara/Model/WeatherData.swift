@@ -5,75 +5,89 @@
 //  Created by Zeynep Cankaya on 17.07.2025.
 //
 
-import Foundation
+import SwiftData
+@Model
+class WeatherData {
+  
+    var city: String
+    
+    @Relationship(deleteRule: .cascade)
+    var current: Current
+    
+    @Relationship(deleteRule: .cascade)
+    var hourly: [Hourly] = []
+    
+    @Relationship(deleteRule: .cascade)
+    var daily: [Daily] = []
+    
+   init(city: String, current: Current, hourly: [Hourly]=[], daily: [Daily]=[]) {
+        self.city = city
+        self.current = current
+        self.hourly = hourly
+        self.daily = daily
+    }
+}
+@Model
+class Current {
+        var weatherCode: Int
+        var temperature: Double
+        var rain: Float
+        var showers: Float
+        var windSpeed: Float
+        var snowfall: Float
+        var windDirection : Float
+    
+    var weatherData : WeatherData?
+        
+    init(weatherCode: Int, temperature: Double, rain: Float, showers: Float, windSpeed: Float, snowfall: Float, windDirection: Float) {
+        self.weatherCode = weatherCode
+        self.temperature = temperature
+        self.rain = rain
+        self.showers = showers
+        self.windSpeed = windSpeed
+        self.snowfall = snowfall
+        self.windDirection = windDirection
+    }
+}
+ @Model
+class Hourly  {
+        var weatherCode: Int
+        var time: String
+        var temperature: Double
+        var showers: Float
+        var snowfall: Float
+        var windSpeed : Float
+        var rain: Float
+      
+    var weatherData : WeatherData?
+    
+    init(weatherCode: Int, time: String, temperature: Double, showers: Float, snowfall: Float, windSpeed: Float, rain: Float) {
+        self.weatherCode = weatherCode
+        self.time = time
+        self.temperature = temperature
+        self.showers = showers
+        self.snowfall = snowfall
+        self.windSpeed = windSpeed
+        self.rain = rain
 
-struct WeatherData : Decodable {
+    }
+}
+@Model
+class Daily  {
+    var weatherCode: Int
+    var time : String
+    var temperatureMax: Double
+    var temperatureMin: Double
    
-    let current: Current
-    let hourly: Hourly
-    let daily: Daily
+    var weatherData : WeatherData?
     
-    enum CodingKeys : String, CodingKey {
-        case hourly, daily, current
-       
-    }
-    
-}
-struct Current : Decodable {
-        let weatherCode: Int
-        let temperature: Double
-        let isDay: Float
-        let rain: Float
-        let showers: Float
-        let windSpeed: Float
-        let snowfall: Float
-        let windDirection : Float
-        
-        enum CodingKeys : String, CodingKey {
-            case weatherCode = "weather_code"
-            case temperature = "temperature_2m"
-            case isDay = "is_day"
-            case rain, showers, snowfall
-            case windSpeed = "wind_speed_10m"
-            case windDirection = "wind_direction_10m"
-        }
-    }
-    
-struct Hourly : Decodable {
-        let weatherCode: [Int]
-        let time: [String]
-        let temperature: [Double]
-        let showers: [Float]
-        let snowfall: [Float]
-        let windSpeed : [Float]
-        let rain: [Float]
-        let isDay: [Float]
-    
-    
-    enum CodingKeys : String, CodingKey {
-        case time
-        case weatherCode = "weather_code"
-        case windSpeed = "wind_speed_10m"
-        case temperature = "temperature_2m"
-        case rain, showers, snowfall
-        case isDay = "is_day"
+    init(weatherCode: Int, time: String, temperatureMax: Double, temperatureMin: Double) {
+        self.weatherCode = weatherCode
+        self.time = time
+        self.temperatureMax = temperatureMax
+        self.temperatureMin = temperatureMin
     }
 }
-    
-struct Daily : Decodable {
-        let weatherCode: [Int]
-        let time : [String]
-        let temperatureMax: [Double]
-        let temperatureMin: [Double]
-    
-    
-    enum CodingKeys : String, CodingKey {
-        case weatherCode = "weather_code"
-        case time
-        case temperatureMax = "temperature_2m_max"
-        case temperatureMin = "temperature_2m_min"
-        
-    }
-}
+
     
 
