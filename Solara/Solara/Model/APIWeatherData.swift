@@ -8,12 +8,24 @@
 import SwiftData
 
 struct APIWeatherData: Decodable {
+    
+    let timeZone : String
+    let timeZoneAbbreviation : String
     let current: APICurrent
     let hourly: APIHourly
     let daily: APIDaily
+    
+    enum CodingKeys: String, CodingKey{
+        case timeZone = "timezone"
+        case timeZoneAbbreviation = "timezone_abbreviation"
+        case current
+        case hourly
+        case daily
+    }
 }
 
 struct APICurrent: Decodable {
+    
     let weatherCode: Int
     let temperature: Double
     let rain: Float
@@ -30,8 +42,6 @@ struct APICurrent: Decodable {
         case windSpeed = "wind_speed_10m"
         case snowfall
         case windDirection = "wind_direction_10m"
-        
-        
     }
 }
 

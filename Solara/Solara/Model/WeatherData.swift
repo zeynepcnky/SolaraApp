@@ -4,15 +4,15 @@
 //
 //  Created by Zeynep Cankaya on 17.07.2025.
 //
-
+import Foundation
 import SwiftData
 @Model
-class WeatherData {
+final class WeatherData {
   
     var city: String
-    
+    var timeZoneIdentifier : String = "GMT"
     @Relationship(deleteRule: .cascade)
-    var current: Current
+    var current: Current?
     
     @Relationship(deleteRule: .cascade)
     var hourly: [Hourly] = []
@@ -20,8 +20,9 @@ class WeatherData {
     @Relationship(deleteRule: .cascade)
     var daily: [Daily] = []
     
-   init(city: String, current: Current, hourly: [Hourly]=[], daily: [Daily]=[]) {
+    init(city: String, timeZoneIdentifier: String, current: Current? = nil, hourly: [Hourly]=[], daily: [Daily]=[]) {
         self.city = city
+        self.timeZoneIdentifier = timeZoneIdentifier
         self.current = current
         self.hourly = hourly
         self.daily = daily
@@ -29,6 +30,7 @@ class WeatherData {
 }
 @Model
 class Current {
+       
         var weatherCode: Int
         var temperature: Double
         var rain: Float
@@ -39,7 +41,8 @@ class Current {
     
     var weatherData : WeatherData?
         
-    init(weatherCode: Int, temperature: Double, rain: Float, showers: Float, windSpeed: Float, snowfall: Float, windDirection: Float) {
+    init(  weatherCode: Int, temperature: Double, rain: Float, showers: Float, windSpeed: Float, snowfall: Float, windDirection: Float) {
+       
         self.weatherCode = weatherCode
         self.temperature = temperature
         self.rain = rain
@@ -52,7 +55,7 @@ class Current {
  @Model
 class Hourly  {
         var weatherCode: Int
-        var time: String
+        var date : Date?
         var temperature: Double
         var showers: Float
         var snowfall: Float
@@ -61,9 +64,9 @@ class Hourly  {
       
     var weatherData : WeatherData?
     
-    init(weatherCode: Int, time: String, temperature: Double, showers: Float, snowfall: Float, windSpeed: Float, rain: Float) {
+    init(weatherCode: Int, date: Date, temperature: Double, showers: Float, snowfall: Float, windSpeed: Float, rain: Float) {
         self.weatherCode = weatherCode
-        self.time = time
+        self.date = date
         self.temperature = temperature
         self.showers = showers
         self.snowfall = snowfall
@@ -75,15 +78,15 @@ class Hourly  {
 @Model
 class Daily  {
     var weatherCode: Int
-    var time : String
+    var date : Date?
     var temperatureMax: Double
     var temperatureMin: Double
    
     var weatherData : WeatherData?
     
-    init(weatherCode: Int, time: String, temperatureMax: Double, temperatureMin: Double) {
+    init(weatherCode: Int, date : Date, temperatureMax: Double, temperatureMin: Double) {
         self.weatherCode = weatherCode
-        self.time = time
+        self.date = date
         self.temperatureMax = temperatureMax
         self.temperatureMin = temperatureMin
     }
