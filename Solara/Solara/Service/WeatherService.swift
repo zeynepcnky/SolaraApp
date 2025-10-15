@@ -13,7 +13,7 @@ struct WeatherService  {
     
   
     func fetchWeather(latitude:Double, longitude :Double) async throws -> APIWeatherData{
-        let urlString = "https://api.open-meteo.com/v1/forecast?latitude=\(latitude)&longitude=\(longitude)&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=weather_code,temperature_2m,rain,showers,snowfall,wind_speed_10m,is_day&models=best_match&current=weather_code,temperature_2m,is_day,wind_speed_10m,wind_direction_10m,snowfall,showers,rain&forecast_days=14&timezone=GMT"
+        let urlString = "https://api.open-meteo.com/v1/forecast?latitude=\(latitude)&longitude=\(longitude)&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=weather_code,temperature_2m,rain,showers,snowfall,wind_speed_10m,is_day&models=best_match&current=weather_code,temperature_2m,is_day,wind_speed_10m,wind_direction_10m,snowfall,showers,rain&forecast_days=14&timezone=auto"
         
         
         guard let url = URL(string: urlString) else {
