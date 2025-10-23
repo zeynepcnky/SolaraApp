@@ -31,12 +31,17 @@ struct CardView : View {
         
         HStack(spacing: 16){
             VStack(alignment: .leading, spacing: 6){
-                Text(cityData.city)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 4)
+                HStack {
+                    Text(cityData.city)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 4)
+                    Text("/ " + (cityData.admin1 ?? ""))
+                        .font(.subheadline)
+                        .foregroundStyle(Color(.white))
+                        }
                
-                TimelineView(.everyMinute) { context in
+               TimelineView(.everyMinute) { context in
                     Text(WeatherFormatter.formatCurrentTime(for: context.date, with: cityData.timeZoneIdentifier))
                         .font(.subheadline)
                 }
@@ -44,8 +49,7 @@ struct CardView : View {
                 Text("\(weatherIcon.description)")
                     .font(Font.footnote)
                     .fontWeight(.medium)
-                
-            }
+                }
                         
             Spacer()
             
@@ -56,7 +60,7 @@ struct CardView : View {
         .foregroundStyle(.white)
         .padding(.vertical)
         .padding(.horizontal, 30)
-        .frame(width: 400, height: 125)
+        .frame(height: 125)
         
         .background(
                     LinearGradient(
