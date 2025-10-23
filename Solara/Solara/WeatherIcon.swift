@@ -59,42 +59,37 @@ enum WeatherIcon{
         }
     }
     
-    var gradient: LinearGradient {
-            switch self {
-            case .clearDay:
-                return LinearGradient(colors: [.lightYellow, .babyOrange],
-                                      startPoint: .topLeading,
-                                      endPoint: .bottomTrailing)
-            case .partlyCloudy:
-                return LinearGradient(colors: [.baby, .darkBlue],
-                                      startPoint: .topLeading,
-                                      endPoint: .bottomTrailing)
-            case .fog:
-                return LinearGradient(colors: [.gray.opacity(0.8), .black.opacity(0.5)],
-                                      startPoint: .top,
-                                      endPoint: .bottom)
-            case .rain, .rainShowers:
-                return LinearGradient(colors: [.blue, .indigo],
-                                      startPoint: .topLeading,
-                                      endPoint: .bottomTrailing)
-            case .snow, .snowShowers, .snowGrains:
-                return LinearGradient(colors: [.white, .blue.opacity(0.5)],
-                                      startPoint: .topLeading,
-                                      endPoint: .bottomTrailing)
-            case .thunderstorm, .thunderstormHail:
-                return LinearGradient(colors: [.purple, .black],
-                                      startPoint: .topLeading,
-                                      endPoint: .bottomTrailing)
-            default:
-                return LinearGradient(colors: [.blue, .purple],
-                                      startPoint: .topLeading,
-                                      endPoint: .bottomTrailing)
-            }
+    var description: String {
+        switch self {
+        case .clearDay:
+            return "Clear Sky"
+        case .partlyCloudy:
+            return "Mostly Cloudy"
+        case .fog:
+            return "Fog and Rime Fog"
+        case .drizzle:
+            return "Drizzle"
+        case .freezingDrizzle:
+            return "Freezing Drizzle"
+        case .rain:
+            return "Rain"
+        case .freezingRain:
+            return "Freezing Rain"
+        case .snow:
+            return "Snowfall"
+        case .snowGrains:
+            return "Snow Grains"
+        case .rainShowers:
+            return "Rain Showers"
+        case .snowShowers:
+            return "Snow Showers"
+        case .thunderstorm:
+            return "Thunderstorm"
+        case .thunderstormHail:
+            return "Thunderstorm with Hail"
+        case .unknown:
+            return "Weather information unavailable"
         }
-    var cardGradient: LinearGradient {
-         LinearGradient(colors: [.white.opacity(0.3), .white.opacity(0.1)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing)
-     }
     }
+}
 
