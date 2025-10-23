@@ -7,10 +7,13 @@
 import Foundation
 import SwiftData
 @Model
-final class WeatherData {
+final class WeatherData : Identifiable {
+    
   
     var city: String
     var timeZoneIdentifier : String = "GMT"
+    
+    
     @Relationship(deleteRule: .cascade)
     var current: Current?
     
@@ -91,6 +94,48 @@ class Daily  {
         self.temperatureMin = temperatureMin
     }
 }
-
+extension WeatherData {
+    static func fromAPI(apiData: APIWeatherData, coordinate: GeocodeResult) -> WeatherData {
+        let current = Current(weatherCode: apiData.current.weatherCode,
+                              temperature: apiData.current.temperature,
+                              rain: apiData.current.rain,
+                              showers: apiData.current.showers,
+                              windSpeed: apiData.current.windSpeed,
+                              snowfall: apiData.current.snowfall,
+                              windDirection: apiData.current.windDirection)
+       
+        let hourly = apiData.hourly.time.indices.compactMap { index -> Hourly? in
+            let timeStrig = apiData.hourly.time[index]
+            guard let date = WeatherFormatter.inputHourFormatter.date(from: timeStrig) else { return nil }
+           return Hourly(
+                    weatherCode: apiData.hourly.weatherCode[index],
+                    date: date,
+                   temperature: apiData.hourly.temperature[index],
+                    showers: apiData.hourly.showers[index],
+                    snowfall : apiData.hourly.snowfall[index],
+                   windSpeed: apiData.hourly.windSpeed[index],
+                    rain: apiData.hourly.rain[index],
+            
+            )
+        }
+        let daily = apiData.daily.time.indices.compactMap { index -> Daily? in
+            let timeString = apiData.daily.time[index]
+            guard let date = WeatherFormatter.inputDateFormatter.date(from: timeString) else { return nil }
+          return Daily(
+                weatherCode: apiData.daily.weatherCode[index],
+                date: date,
+                temperatureMax: apiData.daily.temperatureMax[index],
+                temperatureMin: apiData.daily.temperatureMin[index] )
+        }
+        
+        return WeatherData(
+            city: coordinate.name,
+            timeZoneIdentifier: apiData.timeZone,
+            current: current,
+            hourly: hourly,
+            daily: daily
+        )
+    }
+}
     
 

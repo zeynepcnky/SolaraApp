@@ -9,7 +9,7 @@ import Foundation
 
 
 struct Geocode : Decodable {
-    let results : [GeocodeResult]?
+    let results : [GeocodeResult]
     let generationTime_ms : Double?
 }
 struct GeocodeResult : Decodable, Identifiable {
