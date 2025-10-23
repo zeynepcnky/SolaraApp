@@ -11,6 +11,7 @@ final class WeatherData : Identifiable {
     
   
     var city: String
+    var admin1 : String?
     var timeZoneIdentifier : String = "GMT"
     
     
@@ -23,8 +24,9 @@ final class WeatherData : Identifiable {
     @Relationship(deleteRule: .cascade)
     var daily: [Daily] = []
     
-    init(city: String, timeZoneIdentifier: String, current: Current? = nil, hourly: [Hourly]=[], daily: [Daily]=[]) {
+    init(city: String, admin1 : String?,  timeZoneIdentifier: String, current: Current? = nil, hourly: [Hourly]=[], daily: [Daily]=[]) {
         self.city = city
+        self.admin1 = admin1
         self.timeZoneIdentifier = timeZoneIdentifier
         self.current = current
         self.hourly = hourly
@@ -130,6 +132,7 @@ extension WeatherData {
         
         return WeatherData(
             city: coordinate.name,
+            admin1: coordinate.admin1,
             timeZoneIdentifier: apiData.timeZone,
             current: current,
             hourly: hourly,
