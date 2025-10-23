@@ -10,58 +10,65 @@ import SwiftData
 
 struct CardView : View {
     
-    var city : String
-    var temperature : Double
-    var formatter = WeatherFormatter()
-    let weatherCode : Int
+    var cityData : WeatherData
+
     @Binding var selectedUnit : Bool
     
-   
-    
-    var displayedTemp : Double {
-        selectedUnit ? formatter.celciusToFarenheit(temperature) : temperature
+    private var currentTemperature : Double {
+        cityData.current?.temperature ?? 0.0
     }
-   
+    private var weatherCode: Int {
+        cityData.current?.weatherCode ?? 0
+    }
+    
+   private  var displayedTemp : Double {
+        selectedUnit ? WeatherFormatter.celciusToFarenheit(currentTemperature) : currentTemperature
+    }
+    
     
     var body: some View {
-        ZStack{
-            let weatherIcon = WeatherIcon(code: weatherCode)
-            HStack{
-                Image(weatherIcon.assetName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .padding(.leading,35)
-                
-                Spacer()
-                
-                VStack(alignment: .leading, spacing: 4){
-                    
-                    Text(city)
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.white)
-                    
-                    Text("\(formatter.formatTemperature(displayedTemp))")
-                        .font(.system(size: 48, weight: .medium))
-                        .foregroundColor(.white)
-                    
+        let weatherIcon = WeatherIcon(code: weatherCode)
+        
+        HStack(spacing: 16){
+            VStack(alignment: .leading, spacing: 6){
+                Text(cityData.city)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 4)
+               
+                TimelineView(.everyMinute) { context in
+                    Text(WeatherFormatter.formatCurrentTime(for: context.date, with: cityData.timeZoneIdentifier))
+                        .font(.subheadline)
                 }
-                .padding(.trailing, 35)
+                
+                Text("\(weatherIcon.description)")
+                    .font(Font.footnote)
+                    .fontWeight(.medium)
                 
             }
+                        
+            Spacer()
             
-            .frame(width: 350, height: 200, alignment: .center)
-            
-            .background(
-                RoundedRectangle(cornerRadius: 35)
-                    .fill(weatherIcon.gradient))
-            
+            Text("\(WeatherFormatter.formatTemperature(displayedTemp))")
+                .font(.system(size: 48, weight: .medium))
+                
         }
-            
-            
+        .foregroundStyle(.white)
+        .padding(.vertical)
+        .padding(.horizontal, 30)
+        .frame(width: 400, height: 125)
         
-
-        
+        .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color("babyBlue"), Color("DarkBlue")]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .shadow(color: .gray.opacity(0.4), radius: 10, x: 0, y: 5)
+                .padding(.horizontal)
+            )
+            
     }
+    
 }
