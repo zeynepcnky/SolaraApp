@@ -58,6 +58,7 @@ final class WeatherCoordinator: ObservableObject {
             await cityListViewModel.fetchWeather(city: cityToAdd)
             
             self.searchedCityDetail = nil
+            viewModel.clearSearch()
             self.isSearchActive?.wrappedValue = false
         }
     }
