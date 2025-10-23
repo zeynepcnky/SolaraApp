@@ -10,75 +10,102 @@ import SwiftData
 
 struct ContentView: View {
     
-    @Environment(\.modelContext) private var context
-    @StateObject private var coordinator = WeatherCoordinator()
-  
+   @StateObject private var coordinator = WeatherCoordinator()
+    
     @State private var showSettings: Bool = false
     @State private var isEditing: Bool = false
-    @State private var selectedUnit = false
+    @State private var selectedUnit : Bool = false
+    @State private var isSearchActive : Bool = false
     
-  
+    @Environment(\.modelContext) private var context
+    
     var body : some View {
-        NavigationView {
+        NavigationStack{
             VStack{
+                if isSearchActive {
+                    WeatherSearchResultView(viewModel: coordinator.viewModel, onCitySelected: coordinator.selectCityFromSearch) }
                 
-                if !coordinator.isSearchableActive {
-                    CardListView (
-                        coordinator: coordinator,
-                        cities: coordinator.addedCity,
-                        onSelect: { city in coordinator.select(city)},
-                        isEditing: $isEditing,
-                        selectedUnit: $selectedUnit)
-                } else {
-                    WeatherSearchView(
-                        cityName: $coordinator.cityName,
-                        onSelect: {  coordinator.startSearch() })
+                else {
+                    VStack{
+                        Image(systemName:"sun.max")
+                            .foregroundColor(.darkBlue)
+                        
+                        
+                        Text("Solara")
+                            .font(Font.largeTitle)
+                            .fontDesign(Font.Design.rounded)
+                            .foregroundColor(.darkBlue)
+                    }
+                    .padding(.top, 10)
+                    .padding(.bottom, 50)
+                    
+                    
+                    List{
+                        ForEach(coordinator.cityListViewModel.addedCity) { city in
+                            Button(action: {
+                                coordinator.selectedCityForDetail = city
+                            }) {
+                                CardView(cityData: city , selectedUnit: $selectedUnit)
+                            }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                            .padding(.vertical, 4)
+                        }
+                        .onDelete(perform: coordinator.cityListViewModel.deleteCity)
+                        .onMove(perform: coordinator.cityListViewModel.moveCity)
+                        
+                    }
+                    .listStyle(.plain)
+                    .environment(\.editMode, .constant(isEditing ? .active : .inactive))
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .toolbar {
                 ToolbarItem (placement: .topBarTrailing) {
                     Button {
                         withAnimation { showSettings.toggle()}
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                            .imageScale(.large)
-                    }
+                    }label: { Image(systemName: "ellipsis") }
                 }
-            } .navigationTitle("☀️ Solara")
-        }
-            .onAppear{
-                coordinator.setupContext(context)
-            }
-            
-            
-            .sheet(item: $coordinator.selectedWeather){ (weather: WeatherData) in
-                CityView(viewModel: coordinator.viewModel,
-                         city: weather.city,
-                         isFromSearch: false,
-                         selectedUnit: $selectedUnit)
-            }
-            
-            .sheet(isPresented: $coordinator.isSheetActive){
-                CityView(viewModel: coordinator.viewModel, city: coordinator.cityName,onAdd: {coordinator.addCity()}, isFromSearch: true,
-                         selectedUnit: $selectedUnit)
             }
             
             .searchable(
-                text : $coordinator.cityName,
-                isPresented: $coordinator.isSearchableActive,
-                prompt: "Search a City")
+                text: $coordinator.viewModel.searchText,
+                isPresented: $isSearchActive,
+                prompt: "Search for a city"
+            )
+            .sheet(item: $coordinator.searchedCityDetail){ city in
+                CityView(weatherData: city,
+                         onAdd: { coordinator.addLastSearchedCity()},
+                         isFromSearch: true,
+                         selectedUnit: $selectedUnit)
+            }
+            .sheet(item: $coordinator.selectedCityForDetail){ city in
+                CityView(weatherData: city,
+                         onAdd: {},
+                         isFromSearch: false,
+                         selectedUnit: $selectedUnit)
+                .onAppear{coordinator.cityListViewModel.stopUpdateLoop()}
+                .onDisappear {coordinator.cityListViewModel.startUpdateLoop()}
+                
+            }
+
+        .overlay{ SettingsOverlay(
+                isVisible: $showSettings,
+                selectedUnit: $selectedUnit,
+                onEdit: {
+                    showSettings = false
+                    isEditing.toggle()
+                }
+            )
+            }
+        }
+    
+        .onAppear{ coordinator.setup(with: context, isSearchActive: $isSearchActive) }
+       
             
-            .onSubmit(of: .search) { coordinator.startSearch()}
-           
-      
-        
-        
-        .overlay{ SettingsOverlay(isVisible: $showSettings, selectedUnit: $selectedUnit){
-            showSettings = false
-            isEditing = true
-          }
+            
+            
         }
     }
-}
 
 #Preview { ContentView() }
