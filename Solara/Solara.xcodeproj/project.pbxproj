@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E1D313D72EAA7161001E3889 /* .gitignore.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1D313D62EAA7161001E3889 /* .gitignore.xib */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		E15102EE2E29492200BC763F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		E15102DE2E29492100BC763F /* Solara.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Solara.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E15102ED2E29492200BC763F /* SolaraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolaraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E15102F72E29492200BC763F /* SolaraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolaraUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1D313D62EAA7161001E3889 /* .gitignore.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = .gitignore.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +80,7 @@
 		E15102D52E29492100BC763F = {
 			isa = PBXGroup;
 			children = (
+				E1D313D62EAA7161001E3889 /* .gitignore.xib */,
 				E15102E02E29492100BC763F /* Solara */,
 				E15102F02E29492200BC763F /* SolaraTests */,
 				E15102FA2E29492200BC763F /* SolaraUITests */,
@@ -222,6 +228,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1D313D72EAA7161001E3889 /* .gitignore.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
