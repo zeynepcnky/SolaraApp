@@ -15,7 +15,7 @@ struct GeoService {
        
          let encodedCity = cityName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         
-        let urlString = "https://geocoding-api.open-meteo.com/v1/search?name=\(encodedCity)&count=1&language=en&format=json"
+        let urlString = "https://geocoding-api.open-meteo.com/v1/search?name=\(encodedCity)&count=10&language=en&format=json"
         
         guard let url = URL(string: urlString) else{
             throw URLError(.badURL)
