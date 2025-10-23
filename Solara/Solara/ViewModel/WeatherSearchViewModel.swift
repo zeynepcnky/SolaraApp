@@ -6,42 +6,79 @@
 //
 
 import Foundation
+import Combine
+
 @MainActor
-// UI changes uptaded on MAİN THREAD
 class WeatherSearchViewModel : ObservableObject {
+   
+    @Published var searchText: String = ""
+   
+    @Published var searchCoordinate: [GeocodeResult] = []
     
-    @Published var weather: APIWeatherData?
-    @Published var coordinate:  GeocodeResult? = nil
+    @Published var isSearching: Bool = false
+    @Published var errorMessage: String? = nil
     
-    private let weatherService =  WeatherService()
-    private let geocodeService = GeoService()
+    private var cancellables = Set<AnyCancellable>()
     
-    func getWeather(cityName: String) async{
-        do{
-            
-            guard let coords = try await geocodeService.getGeoData(cityName: cityName) else {
-                print("City not found")
-                return
-            }
-            self.coordinate = coords
-            print("✅ Geo decode success → city: \(coords.name), lat: \(coords.latitude), lon: \(coords.longitude)")
-        
-            let data = try await weatherService.fetchWeather(latitude: coords.latitude, longitude: coords.longitude  )
-            self.weather = data
-            print("🌤 Weather fetched successfully for \(coords.name)")
-                        print("   Current temp: \(data.current.temperature)")
-                        print("   Max temp (today): \(data.daily.temperatureMax.first ?? 0)")
-                        print("   Min temp (today): \(data.daily.temperatureMin.first ?? 0)")
-                        print(" Weather Code: \(data.current.weatherCode)")
-        } catch {
-            print("❌ WeatherViewModel error: \(error)")
+   private let geocodeService = GeoService()
+   
+    init() {
+            setupSearchTextSubscriber()
         }
+    
+        private func setupSearchTextSubscriber() {
+            $searchText
+            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .filter { $0.count >= 3 }
+            .removeDuplicates()
+            .flatMap { [weak self] (searchText) -> AnyPublisher<[GeocodeResult], Never> in
+                            guard let self = self else {
+                            return Just([]).eraseToAnyPublisher()
+                            }
+                return Future<[GeocodeResult], Error> { promise in
+                Task {
+                    do {
+                        let results = try await self.geocodeService.getGeoData(cityName: searchText)
+                        let filteredResults = self.filterResultsByPrimaryRegion(results)
+                        promise(.success(filteredResults))
+                        }
+                    catch { promise(.failure(error)) }
+                }
+            }
+                .catch { error -> Just<[GeocodeResult]> in
+                    print("❌ Arama sırasında GeoService hatası: \(error.localizedDescription)")
+                    return Just([])
+                    }
+                    .eraseToAnyPublisher()
+                }
+                    .receive(on: RunLoop.main)
+                    .assign(to: &$searchCoordinate)
+            }
+    
+     
+    
+        private func filterResultsByPrimaryRegion(_ results: [GeocodeResult]) -> [GeocodeResult] {
+            guard let primaryResult = results.first else {
+                return []
+            }
+            let primaryAdmin = primaryResult.admin1
+            let primaryCountry = primaryResult.country
         
-    }
-    func reset(){
-        weather = nil
-        coordinate = nil
+            let filteredList = results.filter { result in
+            guard result.country == primaryCountry, primaryCountry != nil else {
+                return false
+            }
+            if let primaryAdmin = primaryAdmin {
+                return result.admin1 == primaryAdmin
+            }
+            return true
+        }
+            return filteredList
     }
     
+    func clearSearch() {
+        searchText = ""
+        searchCoordinate = []
+        }
 }
     
