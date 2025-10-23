@@ -11,8 +11,10 @@ struct GeoService {
     
     static let shared = GeoService()
     
-    func getGeoData(cityName : String) async throws -> GeocodeResult? {
-        let encodedCity = cityName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+    func getGeoData(cityName : String) async throws -> [GeocodeResult] {
+       
+         let encodedCity = cityName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        
         let urlString = "https://geocoding-api.open-meteo.com/v1/search?name=\(encodedCity)&count=1&language=en&format=json"
         
         guard let url = URL(string: urlString) else{
@@ -22,8 +24,9 @@ struct GeoService {
         
         do {
             let decoder = try JSONDecoder().decode(Geocode.self, from: data)
-            //print(String(data: data, encoding: .utf8)!)
-            return decoder.results?.first
+           // print(String(data: data, encoding: .utf8)!)
+           
+            return decoder.results
         }
         catch{
             print("Geo Decode Error\(error)")

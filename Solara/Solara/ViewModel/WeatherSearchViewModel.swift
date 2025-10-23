@@ -8,7 +8,7 @@
 import Foundation
 @MainActor
 // UI changes uptaded on MAİN THREAD
-class WeatherViewModel : ObservableObject {
+class WeatherSearchViewModel : ObservableObject {
     
     @Published var weather: APIWeatherData?
     @Published var coordinate:  GeocodeResult? = nil
@@ -37,6 +37,10 @@ class WeatherViewModel : ObservableObject {
             print("❌ WeatherViewModel error: \(error)")
         }
         
+    }
+    func reset(){
+        weather = nil
+        coordinate = nil
     }
     
 }
