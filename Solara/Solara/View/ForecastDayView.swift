@@ -61,7 +61,7 @@ struct ForecastDayView : View {
              
          }
          .frame(width: 115, height: 165)
-         .background(Color(.babyBlue))
+         .background(Color(.opaqueSeparator.withAlphaComponent(0.3)))
          .cornerRadius(12)
          .shadow(color: Color.blue.opacity(0.05), radius: 3, x: 0, y:2)
     }

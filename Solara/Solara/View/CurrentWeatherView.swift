@@ -41,7 +41,7 @@ struct CurrentWeatherView : View {
                     
                
                     Text("L:\(WeatherFormatter.formatTemperature(displayMinTemp))")
-                        .foregroundStyle(.darkBlue)}
+                    .foregroundStyle(Color("DarkBlue"))}
                 .font(Font.title3.bold())
                 
             }

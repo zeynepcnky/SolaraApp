@@ -64,7 +64,7 @@ struct CardView : View {
         
         .background(
                     LinearGradient(
-                        gradient: Gradient(colors: [Color("babyBlue"), Color("DarkBlue")]),
+                        gradient: Gradient(colors: [Color("LightBlue"), Color("DarkBlue")]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                 )

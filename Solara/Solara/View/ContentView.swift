@@ -10,21 +10,23 @@ import SwiftData
 
 struct ContentView: View {
     
-   @StateObject private var coordinator = WeatherCoordinator()
+    @EnvironmentObject var coordinator : WeatherCoordinator
     
     @State private var showSettings: Bool = false
     @State private var isEditing: Bool = false
     @State private var selectedUnit : Bool = false
     @State private var isSearchActive : Bool = false
     
-    @Environment(\.modelContext) private var context
+   
     
     var body : some View {
-        NavigationStack{
+        NavigationView{
             VStack{
                 if isSearchActive {
-                    WeatherSearchResultView(viewModel: coordinator.viewModel, onCitySelected: coordinator.selectCityFromSearch) }
-                
+                    WeatherSearchResultView(
+                        viewModel: coordinator.searchViewModel,
+                        onCitySelected: coordinator.selectCityFromSearch)
+                }
                 else {
                     VStack{
                         Image(systemName:"sun.max")
@@ -41,7 +43,7 @@ struct ContentView: View {
                     
                     
                     List{
-                        ForEach(coordinator.cityListViewModel.addedCity) { city in
+                        ForEach(coordinator.cityListViewModel.addedCity, id: \.persistentModelID) { city in
                             Button(action: {
                                 coordinator.selectedCityForDetail = city
                             }) {
@@ -69,13 +71,14 @@ struct ContentView: View {
             }
             
             .searchable(
-                text: $coordinator.viewModel.searchText,
+                text: $coordinator.searchViewModel.searchText,
                 isPresented: $isSearchActive,
                 prompt: "Search for a city"
             )
             .sheet(item: $coordinator.searchedCityDetail){ city in
                 CityView(weatherData: city,
-                         onAdd: { coordinator.addLastSearchedCity()},
+                         onAdd: { coordinator.addLastSearchedCity(isSearchedActive: $isSearchActive)
+                    isSearchActive = false },
                          isFromSearch: true,
                          selectedUnit: $selectedUnit)
             }
@@ -86,7 +89,6 @@ struct ContentView: View {
                          selectedUnit: $selectedUnit)
                 .onAppear{coordinator.cityListViewModel.stopUpdateLoop()}
                 .onDisappear {coordinator.cityListViewModel.startUpdateLoop()}
-                
             }
 
         .overlay{ SettingsOverlay(
@@ -94,18 +96,10 @@ struct ContentView: View {
                 selectedUnit: $selectedUnit,
                 onEdit: {
                     showSettings = false
-                    isEditing.toggle()
-                }
-            )
+                    isEditing.toggle()} )
             }
         }
-    
-        .onAppear{ coordinator.setup(with: context, isSearchActive: $isSearchActive) }
-       
-            
-            
-            
-        }
     }
+}
 
 #Preview { ContentView() }

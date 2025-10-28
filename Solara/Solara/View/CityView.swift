@@ -28,7 +28,7 @@ struct CityView: View {
     }
     
     var body: some View {
-        NavigationStack{
+        NavigationView{
             ScrollView{
                 VStack(spacing: 16){
                     cityHeader
@@ -37,7 +37,12 @@ struct CityView: View {
                     forecastSection
                 }
             }
-            .background(Color(.pastelDarkBlue))
+            .background(
+                LinearGradient(
+                gradient: Gradient(colors: [Color("LightBlue"), Color("DarkBlue")]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+        ))
             .toolbar {
                 if isFromSearch {
                     ToolbarItem(placement: .cancellationAction) {
@@ -48,7 +53,7 @@ struct CityView: View {
                     }
                 }
             }
-        }
+        }.padding(.top, 10)
     }
    
     private var cityHeader: some View {
@@ -89,7 +94,7 @@ struct CityView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12){
-                        ForEach(viewModel.dailyForecasts) { day in
+                        ForEach(viewModel.dailyForecasts, id: \.date) { day in
                             ForecastDayView(
                                 date : day.date ?? Date(),
                                 maxTemp: day.temperatureMax,
@@ -115,7 +120,7 @@ struct CityView: View {
         
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12){
-                ForEach(viewModel.hourlyforecasts) { hour in
+                ForEach(viewModel.hourlyforecasts, id: \.date) { hour in
                     HourlyForecastView(date: hour.date ?? Date(),
                                        temp: hour.temperature,
                                        weatherCode: hour.weatherCode,

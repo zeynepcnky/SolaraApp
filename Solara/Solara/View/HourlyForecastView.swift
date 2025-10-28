@@ -34,10 +34,10 @@ struct HourlyForecastView: View {
                 .frame(width: 20, height: 20)
             
             Text("\(WeatherFormatter.formatTemperature(displayTemp))")
-                .foregroundColor(Color(.darkBlue))
+                .foregroundColor(Color("DarkBlue"))
                 
             
-        }
+        }.padding(.top, 10)
     }
 }
 
