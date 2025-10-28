@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct GeoService {
-    
-    static let shared = GeoService()
+protocol GeoServiceProtocol {
+    func getGeoData(cityName: String) async throws -> [GeocodeResult]
+}
+
+struct GeoService  : GeoServiceProtocol {
     
     func getGeoData(cityName : String) async throws -> [GeocodeResult] {
        

@@ -8,98 +8,116 @@
 import SwiftData
 import Foundation
 
-class WeatherRepository {
-    let context : ModelContext
+@MainActor
+protocol WeatherRepositoryProtocol {
     
     
-    init(context: ModelContext) {
-        self.context = context
+    func fetchAllCities() throws -> [WeatherData]
+    
+    func addCity(from apiData: APIWeatherData, coordinate: GeocodeResult) async throws -> WeatherData
+    func delete(city: WeatherData) throws
+    func refresh(cityToUpdate: WeatherData, with apiData: APIWeatherData) throws
+}
+
+@MainActor
+class WeatherRepository: WeatherRepositoryProtocol {
+   
+   // private let context : ModelContext
+    private let container : ModelContainer
+    private let mapper :  Mapper
+    
+    @MainActor
+    private var mainContext : ModelContext {
+        container.mainContext
     }
     
-    func save() throws { try context.save() }
     
-   
+    init( container: ModelContainer,
+         mapper : Mapper ) {
+        self.container = container
+        self.mapper = mapper
+       
+    }
+  
     func fetchAllCities() throws -> [WeatherData] {
         let descriptor = FetchDescriptor<WeatherData>( sortBy: [SortDescriptor(\.city)] )
-        return try self.context.fetch(descriptor)
+        
+        do{
+            return try mainContext.fetch(descriptor)
+        } catch{
+            print("Repository Fetch : \(error)")
+            throw error
+        }
     }
-    
-    
-    func createCity(from apiData: APIWeatherData, coordinate: GeocodeResult) async -> WeatherData {
-        let weatherDataToSave = WeatherData.fromAPI(apiData: apiData, coordinate: coordinate )
-        self.context.insert(weatherDataToSave)
+    func addCity(from apiData: APIWeatherData, coordinate: GeocodeResult) async throws -> WeatherData {
         
-        print("✅ (\(coordinate.name)) inserted into context.")
+        let context = mainContext
+       
+        do {
+            let cityName = coordinate.name
+            let admin1 = coordinate.admin1
+            
+            let predicate = #Predicate<WeatherData> {
+                $0.city == cityName && $0.admin1 == admin1
+            }
+            let fetchDescriptor = FetchDescriptor<WeatherData>(predicate: predicate)
+            
+            let existingCity = try context.fetch(fetchDescriptor)
+            
+            if let existingCity = existingCity.first {
+                return existingCity
+            }else {
+                let newCity = mapper.map(apiData: apiData, coordinate: coordinate)
+                context.insert(newCity)
+                try context.save()
+                print("✅ \(coordinate.name) successfully saved.")
+                
+                return newCity
+            }
+            
+            
+}
+        catch {
+            print("City not saved: \(error)")
+            throw error
+                }
         
-        return weatherDataToSave
-    }
-    
-    func update(existingCity: WeatherData, with apiData: APIWeatherData) {
-        
-        applyAPIData(to: existingCity, from: apiData)
-        
-        print("🔄 \(existingCity.city) data updated in context.")
     }
     
 
-    func delete(city: WeatherData)  {
+    func delete(city: WeatherData) throws  {
         
-        self.context.delete(city)
-        
-        print("✅ City \(city.city) successfully deleted.")
-    }
-    
-    
-    private func applyAPIData(to weatherData: WeatherData, from apiData: APIWeatherData) {
-        weatherData.timeZoneIdentifier = apiData.timeZone
-        
-        if let current = weatherData.current {
-            current.weatherCode = apiData.current.weatherCode
-            current.temperature = apiData.current.temperature
-            current.rain = apiData.current.rain
-            current.showers = apiData.current.showers
-            current.windSpeed = apiData.current.windSpeed
-            current.snowfall = apiData.current.snowfall
-            current.windDirection = apiData.current.windDirection
+        guard let context = city.modelContext else {
+            print("❌ Delete failed: Model context bulunamadı.")
+            return
+        }
+        context.delete(city)
+        do{
+          try  context.save()
+            print("✅ City \(city.city) successfully deleted.")
+        }catch {
+        print("❌ Delete failed : \(city.city) \(error)")
+            context.insert(city)
+           throw error
         }
        
-        weatherData.hourly.removeAll()
-        
-        let newHourly: [Hourly] = (0..<apiData.hourly.time.count).compactMap { i in
-            let timeString = apiData.hourly.time[i]
-            guard let forecastDate = WeatherFormatter.inputHourFormatter.date(from: timeString) else { return nil }
-           
-            let hour = Hourly(weatherCode: apiData.hourly.weatherCode[i],
-                              date: forecastDate,
-                              temperature: apiData.hourly.temperature[i],
-                              showers: apiData.hourly.showers[i],
-                              snowfall: apiData.hourly.snowfall[i],
-                              windSpeed: apiData.hourly.windSpeed[i],
-                              rain: apiData.hourly.rain[i])
-            
-            hour.weatherData = weatherData
-            return hour
-        }
-        
-        weatherData.hourly = newHourly
-        
-        weatherData.daily.removeAll()
-        
-        let newDaily: [Daily] = (0..<apiData.daily.time.count).compactMap { i in
-            let timeString = apiData.daily.time[i]
-            guard let forecastDate = WeatherFormatter.inputDateFormatter.date(from: timeString) else {
-                return nil
-            }
-            let day = Daily(weatherCode: apiData.daily.weatherCode[i],
-                            date: forecastDate,
-                            temperatureMax: apiData.daily.temperatureMax[i],
-                            temperatureMin: apiData.daily.temperatureMin[i])
-          
-            day.weatherData = weatherData
-            return day
-        }
-       weatherData.daily = newDaily
     }
+    
+
+    func refresh(cityToUpdate: WeatherData, with apiData: APIWeatherData) throws{
+        
+        mapper.update(existingData: cityToUpdate, with: apiData)
+        
+        do {
+            try mainContext.save()
+            print("Repository Update : \(cityToUpdate.city) successfully updated.")
+        }
+        catch {
+            print("Repository Update Error : \(error)")
+            throw error
+        }
+    }
+
 }
 
 

@@ -12,44 +12,58 @@ import Combine
 @MainActor
 final class WeatherCoordinator: ObservableObject {
         
-  @ObservedObject var cityListViewModel = CityListViewModel()
-  @ObservedObject var viewModel =  WeatherSearchViewModel()
+    var cityListViewModel : CityListViewModel
+    var searchViewModel : WeatherSearchViewModel
     
     @Published var searchedCityDetail : WeatherData?
     @Published var selectedCityForDetail : WeatherData?
 
-    private var isSearchActive : Binding<Bool>?
+    
     private var lastGeocodeResult : GeocodeResult?
-    private let service = WeatherService()
     private var cancellables = Set<AnyCancellable>()
     
-    init(){
+    private let service : WeatherServiceProtocol
+    private let mapper : Mapper
+    
+    init(cityListViewModel : CityListViewModel,
+         searchViewModel : WeatherSearchViewModel,
+         service: WeatherServiceProtocol,
+         mapper : Mapper){
+        
+        self.cityListViewModel = cityListViewModel
+        self.searchViewModel = searchViewModel
+        self.service = service
+        self.mapper = mapper
+        
         cityListViewModel.objectWillChange.sink { [weak self]_ in
             self?.objectWillChange.send()
         }
-        .store(in: &cancellables)
-        }
+            .store(in: &cancellables)
+        
+        searchViewModel.objectWillChange.sink { [weak self]_ in
+                    self?.objectWillChange.send()
+                }
+                    .store(in: &cancellables)
+            }
     
     
-    func setup(with context: ModelContext, isSearchActive: Binding<Bool>?){
-        cityListViewModel.setupContext(context)
-        self.isSearchActive = isSearchActive
-    }
-  
 
     func selectCityFromSearch(city : GeocodeResult) {
         self.lastGeocodeResult = city
         Task {
             do {
-              let apiData = try await self.service.fetchWeather(latitude: city.latitude, longitude: city.longitude)
-                let previewData = WeatherData.fromAPI(apiData: apiData, coordinate: city)
+           
+                let apiData = try await self.service.fetchWeather(latitude: city.latitude, longitude: city.longitude)
+                
+                let previewData = self.mapper.map(apiData: apiData, coordinate: city)
+            
                 self.searchedCityDetail = previewData
             }
             catch { print("❌ Error: Failed to fetch search details. - \(error)") }
         }
     }
     
-    func addLastSearchedCity(){
+    func addLastSearchedCity(isSearchedActive : Binding<Bool>){
         guard let cityToAdd = lastGeocodeResult else {
             print("❌ Error: Found no city to add.")
             return
@@ -58,8 +72,9 @@ final class WeatherCoordinator: ObservableObject {
             await cityListViewModel.fetchWeather(city: cityToAdd)
             
             self.searchedCityDetail = nil
-            viewModel.clearSearch()
-            self.isSearchActive?.wrappedValue = false
+            
+            searchViewModel.clearSearch()
+            
         }
     }
   }
