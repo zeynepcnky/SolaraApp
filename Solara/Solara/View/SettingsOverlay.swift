@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsOverlay: View {
     @Binding var isVisible: Bool
     @Binding var selectedUnit: Bool
+    
     let onEdit: () -> Void
 
     var body: some View {

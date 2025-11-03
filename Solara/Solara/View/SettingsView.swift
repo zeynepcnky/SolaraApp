@@ -10,17 +10,20 @@ import Foundation
 
 struct SettingsView : View {
   
-    @Binding var selectedUnit : Bool 
+    @Binding var selectedUnit : Bool
+    
     private let formatter = WeatherFormatter()
     let onEdit: () -> Void
-   
     
-
     var body: some View {
         NavigationView {
             List{
                 HStack{
-                    Button("Edit List"){ onEdit() }
+                    Button{
+                            withAnimation { onEdit() }
+                    } label: {
+                        Text( "Edit List" )
+                    }
                     Spacer()
                     Image(systemName: "pencil")
                     
